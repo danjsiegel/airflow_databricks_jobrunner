@@ -1,37 +1,13 @@
-## Welcome to GitHub Pages
+# airflow_databricks_jobrunner
+Currently, there is a similar official [airflow operator](https://airflow.apache.org/docs/apache-airflow-providers-databricks/stable/operators.html). While the operator does work, there is virtually no feedback, it essentially just runs and then returns back a failure if there is a problem. 
 
-You can use the [editor on GitHub](https://github.com/danjsiegel/airflow_databricks_jobrunner/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+To deal with this, I put together this small bit of code to mimick a subset of the functionalty, basically to submit a job, tell you what is happening while the code is executing and to tell you if the job completed succesffully or raise an error. In order to configure the job, you will need to create a connection called `DatabricksJobRunner.` For the connection, you should put your databricks URL to your workspace. In the extra space, you will need to supply a token `{"token":"your_token"}.` 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+The operator essentially takes a job id, submits a run to the cluster, and the polls every 10 seconds for the status and prints the status. Once the job is done, based on the status of the run, it raises an error or completes gracefully. 
 
-### Markdown
+```python
+from databricks_jobrunner import DatabricksJobRunner`
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+with dag:
+    databricks_job = DatabricksJobRunner(task_id='Databricks Job', dag=dag, jobid='id of your job', notebook_params:'params_you_want_to_pass')
 ```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/danjsiegel/airflow_databricks_jobrunner/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.

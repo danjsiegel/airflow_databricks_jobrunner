@@ -5,9 +5,9 @@ To deal with this, I put together this small bit of code to mimick a subset of t
 
 The operator essentially takes a job id, submits a run to the cluster, and the polls every 10 seconds for the status and prints the status. Once the job is done, based on the status of the run, it raises an error or completes gracefully. 
 
-`from databricks_jobrunner import DatabricksJobRunner
+```python
+from databricks_jobrunner import DatabricksJobRunner`
 
 with dag:
     databricks_job = DatabricksJobRunner(task_id='Databricks Job', dag=dag, jobid='id of your job', notebook_params:'params_you_want_to_pass')
-
-`
+```
